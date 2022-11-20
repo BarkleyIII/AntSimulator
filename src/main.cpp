@@ -131,10 +131,23 @@ void oneExperiment(int i)
 	const static float dt = 0.016f;
 	const static int datapoints_to_record = 100;
 	static int skip_steps = SIMULATION_STEPS/datapoints_to_record;
-	static std::string file_name_prefix = "../data_exp-counters-multi-iteration/AntSimData";
+	static std::string file_name_prefix = "data_exp-mal_frac-mal_evpr_rate-one_iter/AntSimData";
 	static int x = 0;
-	
-	myfile.open(file_name_prefix+getExperimentSpecificName(i)+".csv");
+	const std::basic_string<char, std::char_traits<char>, std::allocator<char>> &filename =
+			file_name_prefix + getExperimentSpecificName(i) + ".csv";
+
+	std::fstream file;
+	file.open(filename,std::ios::out);
+	if(!file)
+	{
+		perror("Error in creating file!!!");
+	}
+	file.close();
+
+	myfile.open(filename);
+	if (!myfile.is_open()){
+		perror("error while opening file");
+	}
 	// std::cout<<file_name_prefix+getExperimentSpecificName(i)<<std::endl;
 	float food_found_per_ant = 0.0;
 	float food_delivered_per_ant = 0.0;
