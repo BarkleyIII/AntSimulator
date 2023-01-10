@@ -31,7 +31,7 @@ const int SIMULATION_STEPS = 50000;		// Only used in the data recording, NOT IN 
 const int SIMULATION_ITERATIONS = 100;
 float malicious_fraction = std::pow(2,-2);
 int dilusion_max = 500;
-int malicious_timer_wait = 100;	
+int malicious_timer_wait = 100;
 bool malicious_ants_focus = true;
 AntTracingPattern ant_tracing_pattern = AntTracingPattern::FOOD;
 bool counter_pheromone = true;
@@ -71,7 +71,7 @@ return SIMULATION_STEPS_string
 }
 
 void loadUserConf()
-{	
+{
 	std::ifstream conf_file("conf.txt");
 	if (conf_file) {
 		conf_file >> malicious_fraction;
@@ -99,7 +99,7 @@ void initWorld(World& world, Colony& colony)
 	for (uint32_t i(0); i < 64; ++i) {
 		float angle = float(i) / 64.0f * (2.0f * PI);
 		world.addMarker(colony.position + 16.0f * sf::Vector2f(cos(angle), sin(angle)), Mode::ToHome, 10.0f, true);
-	}	
+	}
 
 	sf::Image food_map;
 	if (food_map.loadFromFile("map.bmp")) {
@@ -153,24 +153,24 @@ void oneExperiment(int i)
 	float food_delivered_per_ant = 0.0;
 	float fraction_of_ants_found_food = 0.0;
 	float fraction_of_ants_delivered_food = 0.0;
-	
+
 	setStaticVariables();
 	World world(Conf::WORLD_WIDTH, Conf::WORLD_HEIGHT);
-	Colony colony(Conf::COLONY_POSITION.x, Conf::COLONY_POSITION.y, Conf::ANTS_COUNT, 
-	malicious_fraction, malicious_timer_wait, malicious_ants_focus, ant_tracing_pattern, 
+	Colony colony(Conf::COLONY_POSITION.x, Conf::COLONY_POSITION.y, Conf::ANTS_COUNT,
+	malicious_fraction, malicious_timer_wait, malicious_ants_focus, ant_tracing_pattern,
 	counter_pheromone, hell_phermn_intensity_multiplier);
-	initWorld(world, colony);	
+	initWorld(world, colony);
 
 	for(int j = 0; j<SIMULATION_STEPS; j++)
 	{
 		updateColony(world, colony);
 		if(j%skip_steps == 0)
 		{
-			food_found_per_ant = float(Ant::getFoodBitsTaken())/float(1024); // Total  number of Ants 
-			food_delivered_per_ant = float(Ant::getFoodBitsDelivered())/float(1024); // Total  number of Ants 
+			food_found_per_ant = float(Ant::getFoodBitsTaken())/float(1024); // Total  number of Ants
+			food_delivered_per_ant = float(Ant::getFoodBitsDelivered())/float(1024); // Total  number of Ants
 			fraction_of_ants_found_food = float(Colony::getAntsThatFoundFood())/float(1024);
 			fraction_of_ants_delivered_food = float(Colony::getAntsThatDeliveredFood())/float(1024);
-			myfile  << (food_found_per_ant)<< "," << food_delivered_per_ant << "," 
+			myfile  << (food_found_per_ant)<< "," << food_delivered_per_ant << ","
 					<< fraction_of_ants_found_food << "," << fraction_of_ants_delivered_food<<std::endl;
 		}
 	}
@@ -208,8 +208,8 @@ void displaySimulation()
 {
 	setStaticVariables();
 	World world(Conf::WORLD_WIDTH, Conf::WORLD_HEIGHT);
-	Colony colony(Conf::COLONY_POSITION.x, Conf::COLONY_POSITION.y, Conf::ANTS_COUNT, 
-	malicious_fraction, malicious_timer_wait, malicious_ants_focus, ant_tracing_pattern, 
+	Colony colony(Conf::COLONY_POSITION.x, Conf::COLONY_POSITION.y, Conf::ANTS_COUNT,
+	malicious_fraction, malicious_timer_wait, malicious_ants_focus, ant_tracing_pattern,
 	counter_pheromone, hell_phermn_intensity_multiplier);
 
 	sf::ContextSettings settings;
@@ -255,7 +255,7 @@ void displaySimulation()
 		{
 			c = 0;
 				window.clear(sf::Color(94, 87, 87));
-				
+
 				display_manager.draw();
 
 				window.display();
@@ -266,7 +266,7 @@ void displaySimulation()
 int main()
 {
 	Conf::loadTextures();
-	
+
 	loadUserConf();
 	if(DISPLAY_GUI)
 		displaySimulation();
