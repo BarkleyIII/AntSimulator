@@ -28,13 +28,13 @@
 */
 const bool DISPLAY_GUI = false;
 const int SIMULATION_STEPS = 50000;		// Only used in the data recording, NOT IN GUI
-const int SIMULATION_ITERATIONS = 100;
+const int SIMULATION_ITERATIONS = 5;
 float malicious_fraction = std::pow(2,-2);
 int dilusion_max = 500;
 int malicious_timer_wait = 100;
 bool malicious_ants_focus = true;
 AntTracingPattern ant_tracing_pattern = AntTracingPattern::FOOD;
-bool counter_pheromone = true;
+bool counter_pheromone = false;
 float hell_phermn_intensity_multiplier = 1;
 float hell_phermn_evpr_multi = 10.0;
 float cntr_phermn_evpr_multi = 1.0;
@@ -131,7 +131,7 @@ void oneExperiment(int i)
 	const static float dt = 0.016f;
 	const static int datapoints_to_record = 100;
 	static int skip_steps = SIMULATION_STEPS/datapoints_to_record;
-	static std::string file_name_prefix = "data_exp-mal_frac-mal_evpr_rate-one_iter/AntSimData";
+	static std::string file_name_prefix = "data_recreate_no_defense_min_dil_max_inc_20/AntSimData";
 	static int x = 0;
 	const std::basic_string<char, std::char_traits<char>, std::allocator<char>> &filename =
 			file_name_prefix + getExperimentSpecificName(i) + ".csv";
@@ -184,16 +184,25 @@ void simulateAnts()
 	/**
 	 * @brief This loop will start a new colony and run the sim for SIMULATION_STEPS number of steps
 	 */
+	 //TODO iterate over detractor percentages and evaporation rate multipliers to recreate paper findings more easily
 	std::vector<int> dilusion_max_set = {50, 100, 250, 500, 750, 1000};
 	std::vector<int> dilusion_increment_power = {1, 2, 5, 10, 50, 100, 1000};
+	std::vector<double> malicious_fraction_set = {
+			std::pow(2, -1), std::pow(2, -2), std::pow(2, -3), std::pow(2, -4),
+			std::pow(2, -5), std::pow(2, -6), std::pow(2, -7), std::pow(2, -8),
+			std::pow(2, -9), std::pow(2, -10)
+	};
+	std::vector<double> hell_phermn_evpr_multi_set = {0.0, 0.5, 1.0, 2.0, 5.0, 10.0, 50.0, 100.0, 500.0, 1000.0};
 	for(int i = 0; i<SIMULATION_ITERATIONS; i++)
 	{
-		for(int dil_max = 0; dil_max<dilusion_max_set.size(); dil_max++)
+		for(int dil_max = 0; dil_max < malicious_fraction_set.size(); dil_max++)
 		{
-			for(int dil_incr = 0; dil_incr<dilusion_increment_power.size(); dil_incr++)
+			for(int dil_incr = 0; dil_incr<hell_phermn_evpr_multi_set.size(); dil_incr++)
 			{
-				dilusion_max = dilusion_max_set.at(dil_max);
-				dilusion_increment = dilusion_max/dilusion_increment_power.at(dil_incr);
+				malicious_fraction = malicious_fraction_set.at(dil_max);
+				hell_phermn_evpr_multi = hell_phermn_evpr_multi_set.at(dil_incr);
+				dilusion_max = dilusion_max_set.at(0);
+				dilusion_increment = dilusion_max/dilusion_increment_power.at(6);
 				oneExperiment(i);
 			}
 		}
